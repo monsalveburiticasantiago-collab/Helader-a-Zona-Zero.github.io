@@ -1,0 +1,179 @@
+# Helader-a-Zona-Zero.github.io
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú de Heladería</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: linear-gradient(to bottom, #ffecd2, #fcb69f);
+            color: #333;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+        .item:hover {
+            transform: scale(1.03);
+        }
+        .item img {
+            width: 100%;
+            border-radius: 8px;
+            height: 150px;
+            object-fit: cover;
+        }
+        .item h3 {
+            margin: 10px 0 5px;
+        }
+        .item p {
+            font-weight: bold;
+            color: #555;
+        }
+        select, button {
+            margin-top: 10px;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        #carrito {
+            margin-top: 30px;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .carrito-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .carrito-item button {
+            background: red;
+            color: white;
+            border: none;
+            padding: 3px 8px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .qr {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .qr img {
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Menú de Heladería</h1>
+    <div class="menu">
+        <div class="item">
+            <img src="imagenes/vainilla.jpg" alt="Helado de Vainilla">
+            <h3>Helado de Vainilla</h3>
+            <p>$5.000</p>
+            <button onclick="agregarAlCarrito('Helado de Vainilla', 5000)">Agregar al carrito</button>
+        </div>
+        <div class="item">
+            <img src="imagenes/chocolate.jpg" alt="Helado de Chocolate">
+            <h3>Helado de Chocolate</h3>
+            <p>$5.000</p>
+            <button onclick="agregarAlCarrito('Helado de Chocolate', 5000)">Agregar al carrito</button>
+        </div>
+        <div class="item">
+            <img src="imagenes/fresa.jpg" alt="Helado de Fresa">
+            <h3>Helado de Fresa</h3>
+            <p>$5.000</p>
+            <label>Elige Topping 1:</label>
+            <select id="topping1">
+                <option value="">--Selecciona--</option>
+                <option value="Chispas de chocolate">Chispas de chocolate</option>
+                <option value="Jarabe de fresa">Jarabe de fresa</option>
+                <option value="Nueces">Nueces</option>
+                <option value="Trozos de galleta">Trozos de galleta</option>
+            </select>
+            <label>Elige Topping 2:</label>
+            <select id="topping2">
+                <option value="">--Selecciona--</option>
+                <option value="Chispas de chocolate">Chispas de chocolate</option>
+                <option value="Jarabe de fresa">Jarabe de fresa</option>
+                <option value="Nueces">Nueces</option>
+                <option value="Trozos de galleta">Trozos de galleta</option>
+            </select>
+            <button onclick="agregarHeladoFresa()">Agregar al carrito</button>
+        </div>
+    </div>
+
+    <div id="carrito">
+        <h2>Carrito</h2>
+        <div id="lista-carrito"></div>
+        <p><strong>Total:</strong> $<span id="total">0</span></p>
+    </div>
+
+    <div class="qr">
+        <h3>Escanea para ver el menú</h3>
+        <img src="imagenes/qr-menu.png" alt="Código QR">
+    </div>
+
+    <script>
+        let carrito = [];
+        let total = 0;
+
+        function agregarAlCarrito(nombre, precio) {
+            carrito.push({ nombre, precio });
+            total += precio;
+            actualizarCarrito();
+        }
+
+        function agregarHeladoFresa() {
+            let topping1 = document.getElementById("topping1").value;
+            let topping2 = document.getElementById("topping2").value;
+            let descripcion = "Helado de Fresa";
+            if (topping1) descripcion += " + " + topping1;
+            if (topping2) descripcion += " + " + topping2;
+            carrito.push({ nombre: descripcion, precio: 5000 });
+            total += 5000;
+            actualizarCarrito();
+        }
+
+        function eliminarDelCarrito(index) {
+            total -= carrito[index].precio;
+            carrito.splice(index, 1);
+            actualizarCarrito();
+        }
+
+        function actualizarCarrito() {
+            let lista = document.getElementById("lista-carrito");
+            lista.innerHTML = "";
+            carrito.forEach((item, index) => {
+                lista.innerHTML += `
+                    <div class="carrito-item">
+                        <span>${item.nombre} - $${item.precio}</span>
+                        <button onclick="eliminarDelCarrito(${index})">X</button>
+                    </div>
+                `;
+            });
+            document.getElementById("total").textContent = total;
+        }
+    </script>
+
+</body>
+</html>
